@@ -24,7 +24,7 @@ A dark-themed, modern web application that provides AI-powered movie and TV show
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone <repo-url>
    cd ai-movie-recommender
    ```
 
