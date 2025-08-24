@@ -6,7 +6,7 @@ module.exports = {
     TMDB_ACCESS_TOKEN: 'your_tmdb_api_key_here',
     
     // OpenAI API Configuration - Get your API key from https://platform.openai.com/api-keys
-    OPENAI_API_KEY: 'your_openai_api_key_here',
+    OPENAI_API_KEY: 'OPENAI_API_KEY',
     
     // Server Configuration
     PORT: process.env.PORT || 3000

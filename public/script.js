@@ -9,6 +9,7 @@ const errorSection = document.getElementById('errorSection');
 const noResultsSection = document.getElementById('noResultsSection');
 const resultsTitle = document.getElementById('resultsTitle');
 const aiRecommendation = document.getElementById('aiRecommendation');
+const backToAllBtn = document.getElementById('backToAllBtn');
 const resultsGrid = document.getElementById('resultsGrid');
 const errorTitle = document.getElementById('errorTitle');
 const errorMessage = document.getElementById('errorMessage');
@@ -25,6 +26,7 @@ let genresCache = {};
 searchBtn.addEventListener('click', handleSearch);
 randomBtn.addEventListener('click', handleRandomMovie);
 demoBtn.addEventListener('click', handleDemoMode);
+backToAllBtn.addEventListener('click', showAllMovies);
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         handleSearch();
@@ -112,6 +114,19 @@ async function handleRandomMovie() {
     }
 }
 
+// Show all movies function
+function showAllMovies() {
+    currentSearchQuery = '';
+    showLoading();
+    hideAllSections();
+    
+    // Simulate loading time
+    setTimeout(() => {
+        // Show all movies in a grid
+        displayAllMovies();
+    }, 1000);
+}
+
 // Demo mode function
 function handleDemoMode() {
     currentSearchQuery = '';
@@ -120,12 +135,73 @@ function handleDemoMode() {
     
     // Simulate loading time
     setTimeout(() => {
-        // Use demo data
-        const selectedMovie = demoMovies[0]; // Inception
-        const similarMovies = demoMovies.slice(1); // Other movies
-        
-        displayResults(selectedMovie, similarMovies, demoAIRecommendation, 'Demo Mode - Inception Recommendations');
+        // Show all movies first
+        displayAllMovies();
     }, 1500);
+}
+
+// Handle movie card click for genre-based recommendations
+function handleMovieClick(movie) {
+    showLoading();
+    hideAllSections();
+    
+    // Update loading text to be more specific
+    const loadingText = document.querySelector('.loading-text');
+    if (loadingText) {
+        loadingText.textContent = `AI is analyzing "${movie.title}" and finding similar ${getPrimaryGenre(movie)} movies...`;
+    }
+    
+    // Simulate AI processing time
+    setTimeout(() => {
+        // Find movies in the same primary genre
+        const primaryGenre = getPrimaryGenre(movie);
+        const genreMovies = getMoviesByGenre(primaryGenre, movie.id);
+        
+        // Get genre-specific AI recommendation
+        const aiRec = genreRecommendations[primaryGenre] || 
+            `If you enjoyed "${movie.title}" with its ${primaryGenre} elements, you'll love these similar titles! They share the same thematic depth and storytelling style that made your choice so compelling.`;
+        
+        displayResults(movie, genreMovies, aiRec, `Genre Recommendations - ${primaryGenre}`);
+    }, 1500);
+}
+
+// Get the primary genre of a movie
+function getPrimaryGenre(movie) {
+    if (!movie.genre_ids || movie.genre_ids.length === 0) return "Drama";
+    
+    // Map genre IDs to names
+    const genreMap = {
+        28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy",
+        80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family",
+        14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music",
+        9648: "Mystery", 10749: "Romance", 878: "Sci-Fi", 10770: "TV Movie",
+        53: "Thriller", 10752: "War", 37: "Western"
+    };
+    
+    return genreMap[movie.genre_ids[0]] || "Drama";
+}
+
+// Get movies by genre (excluding the selected movie)
+function getMoviesByGenre(genre, excludeMovieId) {
+    const genreMap = {
+        "Action": [28, 12],
+        "Sci-Fi": [878, 12],
+        "Thriller": [53, 80],
+        "Comedy": [35, 10749],
+        "Horror": [27, 53],
+        "Drama": [18, 53],
+        "Romance": [10749, 35],
+        "Animation": [16, 12, 14]
+    };
+    
+    const targetGenres = genreMap[genre] || [18]; // Default to Drama
+    
+    return demoMovies
+        .filter(movie => 
+            movie.id !== excludeMovieId && 
+            movie.genre_ids.some(id => targetGenres.includes(id))
+        )
+        .slice(0, 8); // Return up to 8 movies
 }
 
 // API Functions
@@ -238,6 +314,32 @@ function displayResults(selectedMovie, similarMovies, aiRec, customTitle = null)
     resultsSection.classList.remove('hidden');
 }
 
+function displayAllMovies() {
+    hideAllSections();
+    
+    // Set title
+    resultsTitle.textContent = "All Movies - Click Any Movie for Genre Recommendations";
+    
+    // Set AI recommendation
+    aiRecommendation.innerHTML = `
+        <div style="text-align: center;">
+            <p style="margin-bottom: 15px;">Browse our collection of carefully curated movies across all genres.</p>
+            <p style="font-weight: 600; color: #4caf50;">🎬 Click on any movie card to get AI-powered recommendations based on that movie's genre and style!</p>
+        </div>
+    `;
+    
+    // Clear previous results
+    resultsGrid.innerHTML = '';
+    
+    // Add all movies
+    demoMovies.forEach(movie => {
+        const card = createMovieCard(movie, false);
+        resultsGrid.appendChild(card);
+    });
+    
+    resultsSection.classList.remove('hidden');
+}
+
 function createMovieCard(movie, isSelected = false) {
     const card = movieCardTemplate.content.cloneNode(true);
     
@@ -296,12 +398,24 @@ function createMovieCard(movie, isSelected = false) {
     
     typeSpan.textContent = movie.media_type === 'tv' ? 'TV Show' : 'Movie';
     
+    // Add primary genre to the card
+    const primaryGenre = getPrimaryGenre(movie);
+    const genreSpan = document.createElement('span');
+    genreSpan.textContent = primaryGenre;
+    genreSpan.style.cssText = 'color: #4caf50; font-weight: 600; font-size: 0.8rem;';
+    typeSpan.parentNode.appendChild(genreSpan);
+    
     // Add selected indicator
     if (isSelected) {
         const cardElement = card.querySelector('.movie-card');
         cardElement.style.border = '2px solid #667eea';
         cardElement.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.5)';
     }
+    
+    // Add click functionality for genre-based recommendations
+    const cardElement = card.querySelector('.movie-card');
+    cardElement.classList.add('clickable');
+    cardElement.addEventListener('click', () => handleMovieClick(movie));
     
     return card;
 }
