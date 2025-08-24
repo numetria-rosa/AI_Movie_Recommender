@@ -8,9 +8,7 @@ A dark-themed, modern web application that provides AI-powered movie and TV show
 - **AI Recommendations**: Get personalized reasoning for why you'll love similar titles
 - **Beautiful UI**: Dark theme with modern design and smooth animations
 - **Random Pick**: Discover new movies with the random movie feature
-- **Demo Mode**: Test the app without API keys using sample data
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Hover Effects**: Interactive movie cards with detailed information
 - **Error Handling**: Graceful error handling with user-friendly messages
 
 ## 🚀 Quick Start
@@ -223,5 +221,6 @@ If you encounter any issues or have questions:
 4. Verify your Node.js version is compatible
 
 ---
+
 
 **Happy movie hunting! 🎬✨** 
