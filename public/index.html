@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Movie Recommender</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-film"></i>
+                    AI Movie Recommender
+                </h1>
+                <p class="subtitle">Discover your next favorite movie or show with AI-powered recommendations</p>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Enter a movie or show you love..."
+                        class="search-input"
+                    >
+                    <button id="searchBtn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        Search
+                    </button>
+                </div>
+                <button id="randomBtn" class="random-btn">
+                    <i class="fas fa-dice"></i>
+                    Random Pick
+                </button>
+                <button id="demoBtn" class="demo-btn">
+                    <i class="fas fa-play"></i>
+                    Demo Mode
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading Section -->
+        <section id="loadingSection" class="loading-section hidden">
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">AI is analyzing your taste...</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section hidden">
+            <div class="results-header">
+                <h2 id="resultsTitle">Recommendations</h2>
+                <div class="ai-recommendation" id="aiRecommendation"></div>
+            </div>
+            
+            <div class="results-grid" id="resultsGrid">
+                <!-- Movie/show cards will be inserted here -->
+            </div>
+        </section>
+
+        <!-- Error Section -->
+        <section id="errorSection" class="error-section hidden">
+            <div class="error-container">
+                <i class="fas fa-exclamation-triangle error-icon"></i>
+                <h3 id="errorTitle">Oops! Something went wrong</h3>
+                <p id="errorMessage">We couldn't process your request. Please try again.</p>
+                <button id="retryBtn" class="retry-btn">Try Again</button>
+            </div>
+        </section>
+
+        <!-- No Results Section -->
+        <section id="noResultsSection" class="no-results-section hidden">
+            <div class="no-results-container">
+                <i class="fas fa-search"></i>
+                <h3>No movies found</h3>
+                <p>Try searching for a different movie or show.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Movie Card Template -->
+    <template id="movieCardTemplate">
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="" alt="" class="poster-img">
+                <div class="movie-overlay">
+                    <div class="movie-info">
+                        <h3 class="movie-title"></h3>
+                        <p class="movie-overview"></p>
+                        <div class="movie-genres"></div>
+                        <div class="movie-rating">
+                            <i class="fas fa-star"></i>
+                            <span class="rating-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-details">
+                <h4 class="movie-title-compact"></h4>
+                <div class="movie-meta">
+                    <span class="movie-year"></span>
+                    <span class="movie-type"></span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="demo-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
